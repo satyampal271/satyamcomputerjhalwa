@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Satyam Computer Solutions - Laptop & PC Repair</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Roboto', sans-serif;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Poppins', sans-serif;
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translate3d(0, 40px, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+      .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease-out forwards;
+        opacity: 0; /* Start hidden */
+      }
+      @keyframes zoomInBg {
+        from { transform: scale(1); }
+        to { transform: scale(1.05); }
+      }
+      .animate-hero-zoom {
+         animation: zoomInBg 20s infinite alternate ease-in-out;
+      }
+      
+      /* New Background Animation Styles */
+      @keyframes move-up {
+        from { transform: translateY(0); }
+        to { transform: translateY(-120vh); }
+      }
+      .star {
+        position: absolute;
+        background-color: rgba(0, 119, 255, 0.5);
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(0, 119, 255, 0.8);
+        animation-name: move-up;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
