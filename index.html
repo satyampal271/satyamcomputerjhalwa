@@ -5,6 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Satyam Computer Solutions - Laptop & PC Repair</title>
+    <meta name="description" content="Professional laptop and PC repair services. Fast, reliable, and affordable solutions from Satyam Computer Solutions.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,10 +17,11 @@
       h1, h2, h3, h4, h5, h6 {
         font-family: 'Poppins', sans-serif;
       }
+      /* Refined: Faster and more subtle for a snappier feel */
       @keyframes fadeInUp {
         from {
           opacity: 0;
-          transform: translate3d(0, 40px, 0);
+          transform: translate3d(0, 20px, 0);
         }
         to {
           opacity: 1;
@@ -27,9 +29,26 @@
         }
       }
       .animate-fadeInUp {
-        animation: fadeInUp 0.8s ease-out forwards;
+        animation: fadeInUp 0.6s ease-out forwards;
         opacity: 0; /* Start hidden */
       }
+
+      /* Refined: Faster and adds a subtle scale for a less flat appearance */
+      @keyframes fadeIn {
+        from { 
+          opacity: 0;
+          transform: scale(0.98);
+        }
+        to { 
+          opacity: 1; 
+          transform: scale(1);
+        }
+      }
+      .animate-fadeIn {
+        animation: fadeIn 0.4s ease-out;
+      }
+
+      /* Unchanged: Good for a slow, infinite background effect */
       @keyframes zoomInBg {
         from { transform: scale(1); }
         to { transform: scale(1.05); }
@@ -38,7 +57,7 @@
          animation: zoomInBg 20s infinite alternate ease-in-out;
       }
       
-      /* New Background Animation Styles */
+      /* Unchanged: Background star animation */
       @keyframes move-up {
         from { transform: translateY(0); }
         to { transform: translateY(-120vh); }
@@ -52,13 +71,54 @@
         animation-timing-function: linear;
         animation-iteration-count: infinite;
       }
+      
+      /* New: A slow zoom for static images in the carousel to add dynamism */
+      @keyframes subtleZoom {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.05);
+        }
+      }
+      .animate-subtle-zoom {
+        animation: subtleZoom 8s ease-out forwards;
+      }
+
+      /* Logo animation: slow rotation */
+      @keyframes slowRotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      .animate-slow-rotate {
+        animation: slowRotate 20s linear infinite;
+      }
+      
+      /* Logo animation: node pulse */
+      @keyframes pulseNode {
+        0%, 100% {
+          transform: scale(1);
+          filter: drop-shadow(0 0 3px #0077ff);
+        }
+        50% {
+          transform: scale(1.1);
+          filter: drop-shadow(0 0 8px #0077ff);
+        }
+      }
+      .animate-pulse-node {
+        animation: pulseNode 3s ease-in-out infinite;
+        transform-origin: center;
+        transform-box: fill-box;
+      }
     </style>
   <script type="importmap">
 {
   "imports": {
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
     "react/": "https://aistudiocdn.com/react@^19.1.1/",
-    "react": "https://aistudiocdn.com/react@^19.1.1"
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@6.25.1",
+    "react-router-dom/": "https://aistudiocdn.com/react-router-dom@6.25.1/"
   }
 }
 </script>

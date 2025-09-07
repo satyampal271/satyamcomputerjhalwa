@@ -22,6 +22,16 @@ const BookingForm: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [selectedService, setSelectedService] = useState('');
+
+  useEffect(() => {
+    // Check for service in URL query params
+    const params = new URLSearchParams(window.location.search);
+    const serviceFromUrl = params.get('service');
+    if (serviceFromUrl && servicesList.includes(serviceFromUrl)) {
+      setSelectedService(serviceFromUrl);
+    }
+  }, []);
   
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -79,7 +89,7 @@ const BookingForm: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label htmlFor="service" className="block text-sm font-medium text-gray-300 mb-2">Select Service</label>
-                    <select id="service" name="service" required className="w-full bg-[#081c30] border border-blue-700 text-white rounded-md p-3 focus:ring-[#0077ff] focus:border-[#0077ff]">
+                    <select id="service" name="service" required className="w-full bg-[#081c30] border border-blue-700 text-white rounded-md p-3 focus:ring-[#0077ff] focus:border-[#0077ff]" value={selectedService} onChange={(e) => setSelectedService(e.target.value)}>
                         <option value="">-- Choose a service --</option>
                         {servicesList.map(s => <option key={s} value={s}>{s}</option>)}
                     </select>

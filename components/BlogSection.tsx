@@ -1,9 +1,8 @@
-
 import React from 'react';
 
 const BlogPostCard: React.FC<{ imgSrc: string; title: string; snippet: string }> = ({ imgSrc, title, snippet }) => (
   <div className="bg-blue-900/20 rounded-lg overflow-hidden group transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#0077ff]/20">
-    <img src={imgSrc} alt={title} className="w-full h-48 object-cover group-hover:opacity-90 transition-opacity" loading="lazy" />
+    <img src={imgSrc} alt={title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out" loading="lazy" />
     <div className="p-6">
       <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
       <p className="text-gray-400 mb-4">{snippet}</p>

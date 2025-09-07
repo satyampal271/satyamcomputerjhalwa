@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 const AboutSection: React.FC = () => {
@@ -16,11 +15,11 @@ const AboutSection: React.FC = () => {
               Our team of experts is dedicated to pushing the boundaries of what's possible, leveraging cutting-edge technologies to solve complex challenges and drive tangible results for our clients.
             </p>
           </div>
-          <div>
+          <div className="rounded-lg overflow-hidden shadow-2xl shadow-blue-900/50">
             <img 
               src="https://picsum.photos/600/400?random=2" 
               alt="Satyam Team"
-              className="rounded-lg shadow-2xl shadow-blue-900/50 w-full h-auto object-cover"
+              className="w-full h-auto object-cover transition-transform duration-500 ease-in-out hover:scale-105"
               loading="lazy"
             />
           </div>
