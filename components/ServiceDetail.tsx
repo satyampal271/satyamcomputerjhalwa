@@ -1,101 +1,177 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { servicesData } from './Services';
+import TextToSpeech from './TextToSpeech';
+import PCBuilder from './PCBuilder';
 
-const ServiceDetail: React.FC = () => {
-  const { serviceId } = useParams<{ serviceId: string }>();
+// Child component for rendering details, preventing hook-related errors
+const ServiceDetailContent: React.FC<{ serviceId: string | undefined }> = ({ serviceId }) => {
   const navigate = useNavigate();
-  const service = servicesData.find(s => s.id === serviceId);
+  const service = serviceId ? servicesData.find(s => s.id === serviceId) : undefined;
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    
-    const originalTitle = document.title;
-    const metaDescription = document.querySelector('meta[name="description"]');
-    const originalDescription = metaDescription ? metaDescription.getAttribute('content') : '';
+    setCurrentImageIndex(0);
+  }, [serviceId]);
 
-    if (service) {
-      document.title = `${service.title} | Satyam Computer Solutions`;
-      if (metaDescription) {
-        metaDescription.setAttribute('content', service.shortDescription);
-      }
+  useEffect(() => {
+    if (!service) {
+      navigate('/', { replace: true });
     }
-
-    // Cleanup function to reset title and description on component unmount
-    return () => {
-      document.title = originalTitle;
-      if (metaDescription && originalDescription) {
-        metaDescription.setAttribute('content', originalDescription);
-      }
-    };
-  }, [serviceId, service]);
+  }, [service, navigate]);
 
   if (!service) {
-    return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center animate-fadeInUp">
-        <h2 className="text-3xl font-bold text-white mb-4">Service Not Found</h2>
-        <p className="text-lg text-gray-400 mb-8">The service you are looking for does not exist.</p>
-        <Link to="/" className="inline-block bg-[#0077ff] text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors duration-300">
-          Return to Homepage
-        </Link>
-      </div>
-    );
+    return null; // Render nothing while redirecting
   }
 
-  const handleBookNowClick = () => {
-    navigate(`/?service=${encodeURIComponent(service.title)}#booking`);
-  }
+  const bookingLink = `/#booking?service=${encodeURIComponent(service.title)}`;
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex(prevIndex => 
+      prevIndex === 0 ? service.images.length - 1 : prevIndex - 1
+    );
+  };
+  
+  const handleNextImage = () => {
+    setCurrentImageIndex(prevIndex => 
+      prevIndex === service.images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+  
+  const handleBookNav = (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      navigate(`/#booking?service=${encodeURIComponent(service.title)}`);
+      setTimeout(() => {
+          document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+  };
+  
+  const getVideoId = (url: string) => {
+    const match = url.match(/(?:v=)([\w-]+)/);
+    return match ? match[1] : null;
+  };
+
+  const contentToRead = `
+    Service Details for ${service.title}.
+    ${service.longDescription}.
+    The key features are: ${service.keyFeatures.join('. ')}.
+  `;
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 animate-fadeInUp">
-      <div className="mb-8">
-        <Link to="/#services" className="text-[#0077ff] hover:text-blue-400 transition-colors inline-flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Back to All Services
-        </Link>
-      </div>
+    <>
+      <div className="max-w-4xl mx-auto">
+        <Link to="/#services" className="text-[var(--accent-cyan)] hover:text-white transition-colors mb-8 inline-block">&larr; Back to all services</Link>
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{service.title}</h1>
+        <p className="text-xl text-gray-300 mb-8">{service.description}</p>
+        
+        <div className="mb-8">
+            <TextToSpeech textToRead={contentToRead} />
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        {/* Main Content */}
-        <div className="lg:col-span-2">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">{service.title}</h1>
-          <p className="text-lg text-gray-300 leading-relaxed whitespace-pre-line">{service.longDescription}</p>
-
-          {service.caseStudies && service.caseStudies.length > 0 && (
-            <div className="mt-12">
-              <h2 className="text-3xl font-bold text-white mb-6">Case Study</h2>
-              {service.caseStudies.map((study, index) => (
-                <div key={index} className="bg-blue-900/20 border border-blue-800/50 rounded-lg p-6">
-                  <h3 className="text-xl font-bold text-[#0077ff] mb-2">{study.client}</h3>
-                  <p className="text-gray-400 mb-4"><strong className="text-white">Problem:</strong> {study.problem}</p>
-                  <p className="text-gray-400 mb-4"><strong className="text-white">Solution:</strong> {study.solution}</p>
-                  <p className="text-gray-400"><strong className="text-white">Result:</strong> {study.result}</p>
-                </div>
+        {service.images && service.images.length > 0 && (
+          <div className="mb-8 relative group rounded-lg overflow-hidden">
+            <div className="aspect-w-16 aspect-h-9 bg-black/20">
+                {service.images.map((img, index) => (
+                  <img
+                      key={index}
+                      src={img}
+                      alt={`${service.title} image ${index + 1}`}
+                      className={`w-full h-full object-cover transition-opacity duration-300 ease-in-out ${index === currentImageIndex ? 'opacity-100' : 'opacity-0 absolute inset-0'}`}
+                      loading="lazy"
+                  />
               ))}
             </div>
+            
+            <button onClick={handlePrevImage} className="absolute top-1/2 left-4 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-all opacity-0 group-hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+            </button>
+
+            <button onClick={handleNextImage} className="absolute top-1/2 right-4 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-all opacity-0 group-hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+            </button>
+            
+            <div className="absolute bottom-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
+              {currentImageIndex + 1} / {service.images.length}
+            </div>
+          </div>
+        )}
+
+        <div className="glass-card p-8">
+          <h2 className="text-2xl font-bold text-white mb-4">Service Details</h2>
+          <p className="text-gray-400 mb-6 leading-relaxed">{service.longDescription}</p>
+          
+          <h3 className="text-xl font-bold text-white mb-3">Key Features:</h3>
+          <ul className="list-disc list-inside space-y-2 text-gray-300 mb-6 marker:text-[var(--accent-cyan)]">
+            {service.keyFeatures.map((feature, index) => <li key={index}>{feature}</li>)}
+          </ul>
+          
+          {service.testimonials && service.testimonials.length > 0 && (
+            <div className="my-8">
+              <h3 className="text-xl font-bold text-white mb-4">What Our Clients Say</h3>
+              <div className="space-y-4">
+                {service.testimonials.map((testimonial, index) => (
+                  <blockquote key={index} className="bg-[var(--accent-violet)]/20 p-4 rounded-lg border border-[var(--accent-violet)]/30">
+                    <p className="text-gray-300 italic">"{testimonial.quote}"</p>
+                    <footer className="text-right font-semibold text-[var(--accent-cyan)] mt-2">- {testimonial.name}</footer>
+                  </blockquote>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {service.videoUrl && getVideoId(service.videoUrl) && (
+            <div className="my-8">
+              <h3 className="text-xl font-bold text-white mb-4">Video Showcase</h3>
+              <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden border border-[var(--accent-violet)]/30 shadow-lg">
+                <iframe
+                  className="w-full h-full"
+                  src={`https://www.youtube.com/embed/${getVideoId(service.videoUrl)}`}
+                  title="Custom PC Build Showcase"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
+          )}
+
+          {service.id !== 'custom-gaming-pc-build' && (
+            <>
+              <div className="text-2xl font-semibold text-[var(--accent-cyan)] my-8">{service.price}</div>
+              <a href={bookingLink} onClick={handleBookNav} className="btn-primary py-3 px-8 rounded-md">
+                Book This Service
+              </a>
+            </>
           )}
         </div>
-
-        {/* Sidebar */}
-        <div className="lg:col-span-1">
-            <div className="bg-blue-900/20 border border-blue-800/50 rounded-lg p-6 sticky top-24">
-                 <h2 className="text-2xl font-bold text-white mb-6">Service Gallery</h2>
-                 <div className="grid grid-cols-2 gap-4 mb-8">
-                     {service.images.map((img, index) => (
-                        <div key={index} className="rounded-md overflow-hidden">
-                           <img src={img} alt={`${service.title} example ${index + 1}`} className="w-full h-full object-cover aspect-square hover:scale-105 transition-transform duration-500 ease-in-out" loading="lazy" />
-                        </div>
-                     ))}
-                 </div>
-                 <button onClick={handleBookNowClick} className="w-full bg-[#0077ff] text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-600 transition-all duration-300 shadow-[0_0_15px_rgba(0,119,255,0.5)] hover:shadow-[0_0_25px_rgba(0,119,255,0.8)]">
-                    Book This Service
-                </button>
-            </div>
-        </div>
       </div>
-    </div>
+      
+      {service.id === 'custom-gaming-pc-build' && (
+        <div className="my-16">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <h2 className="text-3xl font-bold text-white mb-4">Interactive PC Builder</h2>
+            <p className="text-lg text-gray-400">
+              Select your desired components below to get a real-time price estimate for your custom build.
+            </p>
+          </div>
+          <PCBuilder />
+        </div>
+      )}
+    </>
+  );
+};
+
+// Main component to get params and pass them down
+const ServiceDetail: React.FC = () => {
+  const { serviceId } = useParams<{ serviceId: string }>();
+
+  return (
+    <main className="bg-[var(--bg-dark-navy)] py-20 animate-fadeIn">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <ServiceDetailContent serviceId={serviceId} />
+      </div>
+    </main>
   );
 };
 

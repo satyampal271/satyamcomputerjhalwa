@@ -4,20 +4,48 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Satyam Computer Solutions - Laptop & PC Repair</title>
-    <meta name="description" content="Professional laptop and PC repair services. Fast, reliable, and affordable solutions from Satyam Computer Solutions.">
+    <title>Satyam Computer Solution - Your Trusted IT Partner</title>
+    <meta name="description" content="Your trusted IT partner with over 5 years of experience serving government and private sectors. Satyam Computer Solution offers reliable, fast, and transparent computer repair and IT services.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+      :root {
+        --bg-dark-navy: #0A0F2C;
+        --accent-cyan: #00FFFF;
+        --accent-violet: #9B59FF;
+      }
       body {
-        font-family: 'Roboto', sans-serif;
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-dark-navy);
+        color: #E0E0E0;
+        background: linear-gradient(270deg, #0a0f2c, #1a0f3d, #0a0f2c, #0f2c3d);
+        background-size: 400% 400%;
+        animation: flow-rgb 15s ease infinite;
       }
-      h1, h2, h3, h4, h5, h6 {
-        font-family: 'Poppins', sans-serif;
+
+      @keyframes flow-rgb {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
       }
-      /* Refined: Faster and more subtle for a snappier feel */
+      
+      /* Page transition animation */
+      @keyframes pageFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fadeIn {
+        animation: pageFadeIn 0.6s ease-out forwards;
+      }
+      
       @keyframes fadeInUp {
         from {
           opacity: 0;
@@ -30,86 +58,203 @@
       }
       .animate-fadeInUp {
         animation: fadeInUp 0.6s ease-out forwards;
-        opacity: 0; /* Start hidden */
-      }
-
-      /* Refined: Faster and adds a subtle scale for a less flat appearance */
-      @keyframes fadeIn {
-        from { 
-          opacity: 0;
-          transform: scale(0.98);
-        }
-        to { 
-          opacity: 1; 
-          transform: scale(1);
-        }
-      }
-      .animate-fadeIn {
-        animation: fadeIn 0.4s ease-out;
-      }
-
-      /* Unchanged: Good for a slow, infinite background effect */
-      @keyframes zoomInBg {
-        from { transform: scale(1); }
-        to { transform: scale(1.05); }
-      }
-      .animate-hero-zoom {
-         animation: zoomInBg 20s infinite alternate ease-in-out;
+        opacity: 0;
       }
       
-      /* Unchanged: Background star animation */
-      @keyframes move-up {
-        from { transform: translateY(0); }
-        to { transform: translateY(-120vh); }
-      }
-      .star {
-        position: absolute;
-        background-color: rgba(0, 119, 255, 0.5);
-        border-radius: 50%;
-        box-shadow: 0 0 10px rgba(0, 119, 255, 0.8);
-        animation-name: move-up;
-        animation-timing-function: linear;
-        animation-iteration-count: infinite;
-      }
-      
-      /* New: A slow zoom for static images in the carousel to add dynamism */
-      @keyframes subtleZoom {
-        from {
-          transform: scale(1);
-        }
-        to {
-          transform: scale(1.05);
-        }
-      }
-      .animate-subtle-zoom {
-        animation: subtleZoom 8s ease-out forwards;
-      }
-
-      /* Logo animation: slow rotation */
-      @keyframes slowRotate {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-      }
-      .animate-slow-rotate {
-        animation: slowRotate 20s linear infinite;
-      }
-      
-      /* Logo animation: node pulse */
-      @keyframes pulseNode {
+      /* Icon pulse animation */
+      @keyframes iconPulse {
         0%, 100% {
           transform: scale(1);
-          filter: drop-shadow(0 0 3px #0077ff);
+          filter: drop-shadow(0 0 4px var(--accent-cyan));
         }
         50% {
           transform: scale(1.1);
-          filter: drop-shadow(0 0 8px #0077ff);
+          filter: drop-shadow(0 0 10px var(--accent-cyan));
         }
       }
-      .animate-pulse-node {
-        animation: pulseNode 3s ease-in-out infinite;
-        transform-origin: center;
-        transform-box: fill-box;
+      .animate-icon-pulse {
+        animation: iconPulse 3s ease-in-out infinite;
       }
+      
+      /* Preloader styles */
+      .preloader {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: var(--bg-dark-navy);
+        display: flex; justify-content: center; align-items: center;
+        flex-direction: column; z-index: 9999;
+        transition: opacity 0.75s ease, visibility 0.75s ease;
+      }
+      .preloader-hidden { opacity: 0; visibility: hidden; }
+      .spinner {
+        width: 50px; height: 50px;
+        border: 5px solid rgba(0, 255, 255, 0.2);
+        border-top-color: var(--accent-cyan);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+      /* Enhanced Glassmorphism Card Style */
+      .glass-card {
+        background: rgba(18, 24, 62, 0.5);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(155, 89, 255, 0.2);
+        border-radius: 1rem;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+      }
+       .glass-card:hover {
+        background-color: rgba(18, 24, 62, 0.7);
+        border-color: rgba(155, 89, 255, 0.4);
+        box-shadow: 0 0 25px rgba(155, 89, 255, 0.15);
+      }
+
+      /* Form Message Animation */
+      @keyframes messageFadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-message { animation: messageFadeIn 0.5s ease-out forwards; }
+      
+      /* Modal Animations */
+      @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes modalPopIn {
+        from { opacity: 0; transform: scale(0.95) translateY(10px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+      }
+
+      /* Text to Speech Player */
+      .tts-player button, .tts-player select {
+        background-color: rgba(0, 255, 255, 0.1);
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        color: white; padding: 0.5rem; border-radius: 0.5rem;
+        transition: background-color 0.3s, border-color 0.3s; cursor: pointer;
+      }
+      .tts-player button:hover, .tts-player select:hover {
+        background-color: rgba(0, 255, 255, 0.2); border-color: rgba(0, 255, 255, 0.5);
+      }
+      .tts-player button:disabled { opacity: 0.5; cursor: not-allowed; }
+      .tts-player .lang-switcher button {
+        padding: 0.5rem 1rem; border-radius: 0.5rem; background-color: transparent;
+        border: 1px solid rgba(0, 255, 255, 0.3);
+      }
+       .tts-player .lang-switcher button.active {
+        background-color: var(--accent-cyan); border-color: var(--accent-cyan); color: #0A0F2C; font-weight: bold;
+      }
+
+      /* --- Futuristic Theme Upgrade Styles --- */
+      
+      @keyframes glow {
+        0% { box-shadow: 0 0 5px var(--accent-cyan), 0 0 10px var(--accent-cyan); }
+        50% { box-shadow: 0 0 20px var(--accent-cyan), 0 0 30px var(--accent-cyan); }
+        100% { box-shadow: 0 0 5px var(--accent-cyan), 0 0 10px var(--accent-cyan); }
+      }
+
+      .btn-primary {
+        display: inline-block;
+        background-color: var(--accent-cyan);
+        color: var(--bg-dark-navy);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease-out;
+        border: 1px solid var(--accent-cyan);
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.5), inset 0 0 5px rgba(255, 255, 255, 0.5);
+      }
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        background-color: #fff;
+        color: var(--bg-dark-navy);
+        box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
+      }
+      
+      /* Hero Animated Circuit Background */
+      .hero-circuit-bg {
+        position: absolute; inset: 0;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%"><defs><pattern id="p" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M50 0 V100 M0 50 H100" stroke="%239B59FF" stroke-width="0.5" opacity="0.1" /></pattern></defs><rect width="100%" height="100%" fill="url(%23p)" /></svg>');
+        animation: bg-pan 200s linear infinite;
+      }
+      @keyframes bg-pan { 0% { background-position: 0 0; } 100% { background-position: 1000px 1000px; } }
+      
+      .circuit-glow {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(0, 255, 255, 0.15) 0%, transparent 70%);
+        animation: circuit-pulse 8s infinite ease-in-out;
+      }
+      @keyframes circuit-pulse {
+        0% { transform: scale(0.8); opacity: 0; }
+        50% { opacity: 1; }
+        100% { transform: scale(1.5); opacity: 0; }
+      }
+
+      /* Testimonial Carousel */
+      .carousel-item {
+        transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        position: absolute;
+        width: 100%;
+      }
+      .carousel-item.active {
+        transform: translateX(0);
+        opacity: 1;
+        position: relative;
+      }
+      .carousel-item.inactive-next {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      .carousel-item.inactive-prev {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      
+      /* Sticky Contact Bar */
+      .sticky-contact-bar a {
+        background-color: rgba(155, 89, 255, 0.7);
+        backdrop-filter: blur(5px);
+        color: white;
+        width: 48px; height: 48px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      }
+      .sticky-contact-bar a:hover {
+        background-color: var(--accent-violet);
+        transform: scale(1.1);
+        box-shadow: 0 0 15px var(--accent-violet);
+      }
+
+      /* Service Tracking Timeline */
+      @keyframes dot-pulse {
+        0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.7); }
+        50% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(0, 255, 255, 0); }
+      }
+      .service-timeline { display: flex; justify-content: space-between; align-items: flex-start; }
+      .timeline-step { flex: 1; text-align: center; position: relative; }
+      .timeline-step:not(:last-child)::after {
+        content: ''; position: absolute; top: 8px; left: 50%;
+        width: 100%; height: 2px;
+        transform: translateX(8px);
+      }
+      .timeline-step .dot {
+        width: 18px; height: 18px; border-radius: 50%;
+        border: 3px solid; margin: 0 auto 8px;
+        transition: all 0.3s ease;
+      }
+      .timeline-step.completed .dot { background-color: var(--accent-cyan); border-color: var(--accent-cyan); }
+      .timeline-step.completed::after { background-color: var(--accent-cyan); }
+      
+      .timeline-step.active .dot { border-color: var(--accent-cyan); animation: dot-pulse 2s infinite; }
+      .timeline-step.active .label { color: var(--accent-cyan); font-weight: bold; }
+      .timeline-step.active::after { background: linear-gradient(to right, var(--accent-cyan), #374151); }
+
+      .timeline-step.pending .dot { border-color: #4b5563; }
+      .timeline-step.pending::after { background-color: #4b5563; }
+
+      .timeline-step .label { font-size: 0.75rem; color: #9ca3af; transition: color 0.3s ease; }
     </style>
   <script type="importmap">
 {
@@ -118,7 +263,8 @@
     "react/": "https://aistudiocdn.com/react@^19.1.1/",
     "react": "https://aistudiocdn.com/react@^19.1.1",
     "react-router-dom": "https://aistudiocdn.com/react-router-dom@6.25.1",
-    "react-router-dom/": "https://aistudiocdn.com/react-router-dom@6.25.1/"
+    "react-router-dom/": "https://aistudiocdn.com/react-router-dom@6.25.1/",
+    "@google/genai": "https://esm.run/@google/genai"
   }
 }
 </script>

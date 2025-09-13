@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
+import { useAuth } from './AuthContext';
 
 const NavLink: React.FC<{ href: string; children: React.ReactNode; onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void; isCurrent?: boolean }> = ({ href, children, onClick, isCurrent }) => (
   <a
@@ -8,7 +9,7 @@ const NavLink: React.FC<{ href: string; children: React.ReactNode; onClick: (e: 
     onClick={onClick}
     className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 cursor-pointer ${
       isCurrent
-        ? 'text-white bg-[#0077ff]'
+        ? 'text-[var(--accent-cyan)]'
         : 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
     }`}
   >
@@ -19,19 +20,29 @@ const NavLink: React.FC<{ href: string; children: React.ReactNode; onClick: (e: 
 const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, logout, user } = useAuth();
   
   const navLinks = [
     { title: "Home", id: "home" },
-    { title: "About", id: "about-us" },
+    { title: "About Us", id: "about-us" },
     { title: "Services", id: "services" },
+    { title: "Portfolio", id: "portfolio" },
     { title: "Blog", id: "blog" },
     { title: "Book Now", id: "booking" },
-    { title: "Contact", id: "contact" }
   ];
 
   useEffect(() => {
-    // Only run intersection observer on the homepage
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
     if (location.pathname === '/') {
       const observer = new IntersectionObserver(
         (entries) => {
@@ -41,7 +52,7 @@ const Header: React.FC = () => {
             }
           });
         },
-        { rootMargin: "-50% 0px -50% 0px" } // Highlights when section is centered
+        { rootMargin: "-50% 0px -50% 0px" }
       );
 
       const elements = navLinks.map(link => document.getElementById(link.id)).filter(Boolean);
@@ -50,37 +61,69 @@ const Header: React.FC = () => {
       return () => {
         elements.forEach(el => observer.unobserve(el!));
       };
+    } else {
+      setActiveSection('');
     }
   }, [location.pathname]);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
-    if(location.pathname !== '/') {
-        window.location.href = `/#${targetId}`;
-    } else {
-        document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
-    }
     if (isMobileMenuOpen) {
       setIsMobileMenuOpen(false);
     }
+    if(location.pathname !== '/') {
+        window.location.hash = '';
+        navigate(`/#${targetId}`);
+    } else {
+        document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+    }
   };
   
+  const handleMobileLinkClick = () => {
+      if (isMobileMenuOpen) {
+          setIsMobileMenuOpen(false);
+      }
+  }
+
+  const handleLogout = () => {
+    logout();
+    handleMobileLinkClick();
+    navigate('/');
+  }
+  
   const isServicePage = location.pathname.startsWith('/services');
+  const isLoginPage = location.pathname === '/login';
+  const isDashboardPage = location.pathname.startsWith('/dashboard');
 
   return (
-    <header className="bg-[#0b2239]/80 backdrop-blur-sm sticky top-0 z-50">
+    <header className={`bg-[var(--bg-dark-navy)]/80 backdrop-blur-sm sticky top-0 z-50 transition-all duration-300 border-b ${isScrolled ? 'shadow-lg shadow-[var(--accent-violet)]/20 border-[var(--accent-violet)]/30' : 'border-transparent'}`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Logo />
+            <Link to="/">
+              <Logo />
+            </Link>
           </div>
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
+            <div className="ml-10 flex items-center space-x-4">
               {navLinks.map((link) => (
                 <NavLink key={link.id} href={`#${link.id}`} onClick={(e) => handleNavClick(e, link.id)} isCurrent={activeSection === link.id || (link.id === 'services' && isServicePage)}>
                   {link.title}
                 </NavLink>
               ))}
+              {isAuthenticated ? (
+                <>
+                  <Link to="/dashboard" className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 ${isDashboardPage ? 'text-black bg-[var(--accent-cyan)]' : 'text-gray-300 hover:bg-gray-700/50 hover:text-white'}`}>
+                    <img src={user?.profilePictureUrl || `https://api.dicebear.com/8.x/initials/svg?seed=${user?.name || 'U'}`} alt="avatar" className="w-7 h-7 rounded-full object-cover" loading="lazy" />
+                    <span>Dashboard</span>
+                  </Link>
+                  <button onClick={handleLogout} className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-red-700/50 hover:text-white transition-colors duration-300">Logout</button>
+                </>
+              ) : (
+                <Link to="/login" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 ${isLoginPage ? 'text-black bg-[var(--accent-cyan)]' : 'text-gray-300 hover:bg-gray-700/50 hover:text-white'}`}>
+                  Login
+                </Link>
+              )}
             </div>
           </div>
           <div className="-mr-2 flex md:hidden">
@@ -115,12 +158,25 @@ const Header: React.FC = () => {
                 href={`#${link.id}`}
                 onClick={(e) => handleNavClick(e, link.id)}
                 className={`block px-3 py-2 rounded-md text-base font-medium ${
-                  (activeSection === link.id || (link.id === 'services' && isServicePage)) ? 'text-white bg-[#0077ff]' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                  (activeSection === link.id || (link.id === 'services' && isServicePage)) ? 'text-black bg-[var(--accent-cyan)]' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                 }`}
               >
                 {link.title}
               </a>
             ))}
+            {isAuthenticated ? (
+              <>
+                <Link to="/dashboard" onClick={handleMobileLinkClick} className={`flex items-center gap-3 block px-3 py-2 rounded-md text-base font-medium ${isDashboardPage ? 'text-black bg-[var(--accent-cyan)]' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}>
+                    <img src={user?.profilePictureUrl || `https://api.dicebear.com/8.x/initials/svg?seed=${user?.name || 'U'}`} alt="avatar" className="w-7 h-7 rounded-full" loading="lazy" />
+                    <span>Dashboard</span>
+                </Link>
+                <button onClick={handleLogout} className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-red-700 hover:text-white">Logout</button>
+              </>
+            ) : (
+              <Link to="/login" onClick={handleMobileLinkClick} className={`block px-3 py-2 rounded-md text-base font-medium ${isLoginPage ? 'text-black bg-[var(--accent-cyan)]' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}>
+                Login
+              </Link>
+            )}
           </div>
         </div>
       )}
